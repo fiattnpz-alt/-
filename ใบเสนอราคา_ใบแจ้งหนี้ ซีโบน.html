@@ -1,0 +1,647 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ใบเสนอราคา/ใบแจ้งหนี้ ซีโบน</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a control bar above a centered A4 sheet (794px wide, scaled down to fit narrow screens).
+   The sheet is always white paper; only the surrounding desk and controls follow the theme. */
+:root{
+  --font:'IBM Plex Sans Thai','Sarabun',system-ui,-apple-system,'Segoe UI',sans-serif;
+  /* desk + controls */
+  --desk:#E6ECEF;
+  --panel:#FFFFFF;
+  --panel-line:#C7D3D9;
+  --ui-ink:#15252D;
+  --ui-mute:#566B75;
+  --accent:#0F5C7A;
+  --accent-ink:#FFFFFF;
+  --focus:#1E8DB5;
+  /* paper (fixed in both themes) */
+  --paper:#FFFFFF;
+  --ink:#16252D;
+  --ink-mute:#5C6F79;
+  --rule:#CBD6DC;
+  --tint:#EEF4F7;
+  --hl:#0F5C7A;
+  --on-hl:#FFFFFF;
+  --edit:rgba(15,92,122,.09);
+  --ph:#9AAAB2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --desk:#0C1317;--panel:#152027;--panel-line:#2A3B45;--ui-ink:#E3EDF1;--ui-mute:#8FA5B0;
+    --accent:#4DB3D6;--accent-ink:#06222D;--focus:#6CC6E6;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --desk:#0C1317;--panel:#152027;--panel-line:#2A3B45;--ui-ink:#E3EDF1;--ui-mute:#8FA5B0;
+  --accent:#4DB3D6;--accent-ink:#06222D;--focus:#6CC6E6;color-scheme:dark;
+}
+body{background:var(--desk);color:var(--ui-ink);font-family:var(--font);font-size:14px;line-height:1.5}
+*{box-sizing:border-box}
+.wrap{max-width:1000px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- control bar ---------- */
+.head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin-bottom:12px}
+.head h2{margin:0;font-size:18px;font-weight:600;text-wrap:balance}
+.head p{margin:0;color:var(--ui-mute);font-size:13px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;background:var(--panel);border:1px solid var(--panel-line);border-radius:8px;padding:12px 14px}
+.seg{display:inline-flex;border:1px solid var(--panel-line);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-weight:500;padding:8px 16px;border:0;background:transparent;color:var(--ui-ink);cursor:pointer;min-height:38px}
+.seg button+button{border-left:1px solid var(--panel-line)}
+.seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+.chk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.chk input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent)}
+.mini{width:48px;font:inherit;text-align:center;padding:3px 4px;border:1px solid var(--panel-line);border-radius:4px;background:var(--panel);color:var(--ui-ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.btn{font:inherit;font-weight:500;padding:8px 14px;min-height:38px;border-radius:6px;border:1px solid var(--panel-line);background:var(--panel);color:var(--ui-ink);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn:disabled{opacity:.55;cursor:default}
+.seg button:focus-visible,.btn:focus-visible,.mini:focus-visible,.chk input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.status{min-height:22px;margin:8px 2px 12px;color:var(--ui-mute);font-size:13px}
+
+/* ---------- stage + sheet ---------- */
+.stage{width:100%;position:relative}
+.scaler{width:794px;margin:0 auto;transform-origin:top left}
+.sheet{position:relative;width:794px;min-height:1122px;background:var(--paper);color:var(--ink);padding:44px 48px 44px;display:flex;flex-direction:column;font-size:13px;line-height:1.55;box-shadow:0 1px 2px rgba(10,30,40,.10),0 14px 34px rgba(10,30,40,.16)}
+.sheet h1{margin:0;font-size:28px;line-height:1.2;font-weight:700;color:var(--hl)}
+.num,.t{font-variant-numeric:tabular-nums}
+
+.ed{display:block;outline:none;border-radius:3px;min-width:1ch;white-space:pre-wrap;overflow-wrap:anywhere;cursor:text;transition:background .12s}
+.ed:hover{background:var(--edit)}
+.ed:focus{background:var(--edit);box-shadow:0 0 0 1.5px var(--hl)}
+[data-ph]:empty::before{content:attr(data-ph);color:var(--ph)}
+.inl{display:inline-block}
+
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:14px;border-bottom:2px solid var(--hl)}
+.logo{position:relative;width:160px;height:76px;display:flex;align-items:center;border:1.5px dashed var(--rule);border-radius:4px;cursor:pointer;color:var(--ink-mute);font-size:12px;text-align:center;justify-content:center;background:transparent}
+.logo:hover{background:var(--edit)}
+.logo:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.logo.has{border-color:transparent;justify-content:flex-start}
+.logo img{max-width:100%;max-height:100%;object-fit:contain;object-position:left center;display:block}
+.logo .logo-ph small{display:block;color:var(--ph)}
+.logo-del{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;border:1px solid var(--rule);background:var(--paper);color:var(--ink);cursor:pointer;line-height:1;font-size:14px;padding:0;display:none}
+.logo.has:hover .logo-del,.logo-del:focus-visible{display:block}
+.doc-title{text-align:right;min-width:0}
+.doc-title .en{margin-top:2px;font-size:12px;letter-spacing:.22em;color:var(--ink-mute);font-weight:500}
+
+.parties{display:grid;grid-template-columns:1fr 290px;gap:24px;margin-top:16px;align-items:start}
+.parties>*{min-width:0}
+.co-name{font-size:16px;font-weight:700}
+.co-line{color:var(--ink);margin-top:2px}
+.co-line .lab{color:var(--ink-mute)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;align-items:start}
+.meta dt{color:var(--ink-mute);margin:0;padding:1px 0;white-space:nowrap}
+.meta dd{margin:0;min-width:0;font-weight:500}
+.date{position:relative;display:inline-block;cursor:pointer}
+.date input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.dt{display:inline-block;min-width:1ch;border-radius:3px;transition:background .12s}
+.date:hover .dt,.date:focus-within .dt{background:var(--edit)}
+.date input:focus-visible+.dt{box-shadow:0 0 0 1.5px var(--hl)}
+
+.cust{margin-top:16px;background:var(--tint);border-radius:4px;padding:12px 14px;display:grid;grid-template-columns:1.25fr 1fr;gap:10px 28px}
+.cust>*{min-width:0}
+.cust .cap{grid-column:1/-1;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--hl)}
+.cust .cn{font-weight:700;font-size:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+.kv dt{margin:0;color:var(--ink-mute);white-space:nowrap}
+.kv dd{margin:0;min-width:0}
+
+.items{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:16px}
+.items th{background:var(--hl);color:var(--on-hl);font-weight:600;font-size:12px;padding:8px 10px;text-align:left}
+.items th.num,.items td.num{text-align:right}
+.items td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.items td.n{color:var(--ink-mute);padding-right:0}
+.items td.t{position:relative;font-weight:500}
+.items tr{break-inside:avoid}
+.del{position:absolute;right:-34px;top:6px;width:24px;height:24px;border-radius:50%;border:1px solid var(--rule);background:var(--paper);color:var(--ink-mute);cursor:pointer;font-size:15px;line-height:1;padding:0;opacity:.55}
+.del:hover,.del:focus-visible{opacity:1;color:var(--ink)}
+.add{margin-top:8px;align-self:flex-start;font:inherit;font-size:12.5px;font-weight:500;color:var(--hl);background:transparent;border:1px dashed var(--hl);border-radius:4px;padding:5px 12px;cursor:pointer}
+.add:hover{background:var(--edit)}
+
+.totals{display:grid;grid-template-columns:1fr 290px;gap:24px;margin-top:14px;align-items:start}
+.totals>*{min-width:0}
+.words{background:var(--tint);border-radius:4px;padding:10px 12px}
+.words .cap,.nt .cap{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--hl);margin-bottom:2px}
+.words .val{font-weight:600}
+.sum .ln{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 10px;border-bottom:1px solid var(--rule)}
+.sum .ln b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sum .ln.grand{background:var(--hl);color:var(--on-hl);border:0;font-size:14px;padding:8px 10px}
+.sum .ln.grand b{font-weight:700}
+.sum .lab{display:inline-flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+#discVal{display:inline-block;min-width:3.2ch;text-align:right;border-bottom:1px dotted var(--ink-mute);border-radius:0}
+.unit{font:inherit;font-size:11px;padding:0 6px;border:1px solid var(--rule);border-radius:3px;background:var(--tint);color:var(--ink);cursor:pointer}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px}
+.notes>*{min-width:0}
+.sheet[data-mode="q"] .only-i{display:none}
+.sheet[data-mode="q"] .notes{grid-template-columns:1fr}
+.sigs{margin-top:auto;padding-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.sigs>*{min-width:0}
+.sig .space{height:50px;border-bottom:1px solid var(--ink)}
+.sig .ed{text-align:center;margin-top:5px}
+.sig .sl{font-weight:600}
+.sig .sd{color:var(--ink-mute)}
+
+/* PDF capture: the cloned sheet gets .exporting, which hides every editing affordance */
+.exporting{box-shadow:none}
+.exporting .noexp,.exporting .date input{display:none}
+.exporting [data-ph]:empty::before{content:""}
+.exporting .logo:not(.has){border-color:transparent}
+.exporting .logo .logo-ph{display:none}
+.exporting .ed:hover,.exporting .ed:focus{background:none;box-shadow:none}
+.exporting .date:hover .dt{background:none}
+.exporting #discVal{border-bottom:0}
+.exporting .unit{border:0;background:none;padding:0;color:inherit;font-size:inherit}
+.exporting .sig .space{border-bottom:1px solid var(--ink)}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div class="wrap">
+  <div class="head">
+    <h2>เทมเพลตใบเสนอราคา / ใบแจ้งหนี้</h2>
+    <p>คลิกที่ข้อความบนเอกสารเพื่อแก้ไขได้ทุกช่อง ยอดเงินคำนวณให้อัตโนมัติ</p>
+  </div>
+
+  <div class="bar">
+    <div class="seg" role="radiogroup" aria-label="ประเภทเอกสาร">
+      <button type="button" role="radio" id="mQ" aria-checked="true">ใบเสนอราคา</button>
+      <button type="button" role="radio" id="mI" aria-checked="false">ใบแจ้งหนี้</button>
+    </div>
+    <div class="opts">
+      <label class="chk"><input type="checkbox" id="optDisc"> ส่วนลด</label>
+      <label class="chk"><input type="checkbox" id="optVat" checked> VAT <input class="mini" id="vatRate" value="7" inputmode="decimal" aria-label="อัตรา VAT เปอร์เซ็นต์"> %</label>
+      <label class="chk"><input type="checkbox" id="optWht"> หัก ณ ที่จ่าย <input class="mini" id="whtRate" value="3" inputmode="decimal" aria-label="อัตราหัก ณ ที่จ่าย เปอร์เซ็นต์"> %</label>
+    </div>
+    <div class="acts">
+      <button type="button" class="btn" id="btnReset">คืนค่าเริ่มต้น</button>
+      <button type="button" class="btn primary" id="btnPdf">ดาวน์โหลด PDF</button>
+    </div>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <div class="stage" id="stage">
+   <div class="scaler" id="scaler">
+    <div class="sheet" id="sheet" data-mode="q">
+
+      <div class="top" data-brk>
+        <div>
+          <div class="logo" id="logo" role="button" tabindex="0" aria-label="ใส่โลโก้บริษัท">
+            <img id="logoImg" alt="โลโก้บริษัท" hidden>
+            <span class="logo-ph" id="logoPh">คลิกเพื่อใส่โลโก้<small>PNG / JPG / SVG</small></span>
+            <button type="button" class="logo-del noexp" id="logoDel" aria-label="ลบโลโก้">×</button>
+          </div>
+          <input type="file" id="logoFile" accept="image/*" hidden>
+        </div>
+        <div class="doc-title">
+          <h1><span class="ed single inl" contenteditable="true" data-km="th" data-ph="ชื่อเอกสาร"></span></h1>
+          <div class="en"><span class="ed single inl" contenteditable="true" data-km="en" data-ph="DOCUMENT"></span></div>
+        </div>
+      </div>
+
+      <div class="parties" data-brk>
+        <div>
+          <div class="co-name ed single" contenteditable="true" data-k="coName" data-ph="ชื่อบริษัทผู้ออกเอกสาร"></div>
+          <div class="co-line"><span class="lab">เลขประจำตัวผู้เสียภาษี :</span> <span class="ed single inl" contenteditable="true" data-k="taxId" data-ph="เลขผู้เสียภาษี"></span></div>
+          <div class="co-line ed" contenteditable="true" data-k="coAddr" data-ph="ที่อยู่บริษัท"></div>
+        </div>
+        <dl class="meta">
+          <dt>วันที่</dt>
+          <dd><span class="date" data-dk="date"><input type="date" aria-label="วันที่ออกเอกสาร"><span class="dt" data-ph="เลือกวันที่"></span></span></dd>
+          <dt id="lblDue">ยืนราคาถึงวันที่</dt>
+          <dd><span class="date" data-dkm="due"><input type="date" aria-label="วันที่ครบกำหนด"><span class="dt" data-ph="เลือกวันที่"></span></span></dd>
+          <dt>ชื่องาน</dt>
+          <dd><span class="ed inl" contenteditable="true" data-k="job" data-ph="ชื่องาน / โครงการ"></span></dd>
+          <dt>อีเมลติดต่อ</dt>
+          <dd><span class="ed single inl" contenteditable="true" data-k="email" data-ph="อีเมลสำหรับติดต่อ"></span></dd>
+        </dl>
+      </div>
+
+      <div class="cust" data-brk>
+        <div>
+          <div class="cn ed" contenteditable="true" data-k="cName" data-ph="ชื่อลูกค้า / บริษัท"></div>
+          <div class="ed" contenteditable="true" data-k="cAddr" data-ph="ที่อยู่ลูกค้า"></div>
+        </div>
+        <dl class="kv">
+          <dt>เลขผู้เสียภาษี</dt><dd><span class="ed single inl" contenteditable="true" data-k="cTax" data-ph="-"></span></dd>
+          <dt>ผู้ติดต่อ</dt><dd><span class="ed single inl" contenteditable="true" data-k="cContact" data-ph="ชื่อผู้ติดต่อ"></span></dd>
+          <dt>โทรศัพท์</dt><dd><span class="ed single inl" contenteditable="true" data-k="cTel" data-ph="เบอร์โทร"></span></dd>
+          <dt>อีเมล</dt><dd><span class="ed single inl" contenteditable="true" data-k="cMail" data-ph="อีเมลลูกค้า"></span></dd>
+        </dl>
+      </div>
+
+      <table class="items">
+        <colgroup><col style="width:34px"><col><col style="width:84px"><col style="width:118px"><col style="width:118px"></colgroup>
+        <thead><tr><th>#</th><th>รายละเอียด</th><th class="num">จำนวน</th><th class="num">ราคาต่อหน่วย</th><th class="num">ยอดรวม</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <button type="button" class="add noexp" id="addRow">+ เพิ่มรายการ</button>
+
+      <div class="totals" data-brk>
+        <div class="words">
+          <div class="cap">จำนวนเงิน (ตัวอักษร)</div>
+          <div class="val" id="words"></div>
+        </div>
+        <div class="sum">
+          <div class="ln"><span>รวมเป็นเงิน</span><b id="sSub">0.00</b></div>
+          <div class="ln" id="lnDisc"><span class="lab">ส่วนลด <span class="ed single" contenteditable="true" id="discVal" data-ph="0"></span><button type="button" class="unit" id="unit" aria-label="สลับหน่วยส่วนลด">บาท</button></span><b id="sDisc">0.00</b></div>
+          <div class="ln" id="lnAfter"><span>ยอดหลังหักส่วนลด</span><b id="sAfter">0.00</b></div>
+          <div class="ln" id="lnVat"><span>ภาษีมูลค่าเพิ่ม <span id="vatPct">7</span>%</span><b id="sVat">0.00</b></div>
+          <div class="ln grand" id="lnTotal"><span>ยอดรวมสุทธิ</span><b id="sTot">0.00</b></div>
+          <div class="ln" id="lnWht"><span>หัก ณ ที่จ่าย <span id="whtPct">3</span>%</span><b id="sWht">0.00</b></div>
+          <div class="ln" id="lnPay"><span>ยอดชำระสุทธิ</span><b id="sPay">0.00</b></div>
+        </div>
+      </div>
+
+      <div class="notes" data-brk>
+        <div class="nt">
+          <div class="cap">หมายเหตุ / เงื่อนไข</div>
+          <div class="ed" contenteditable="true" data-km="notes" data-ph="เงื่อนไขการชำระเงิน หมายเหตุอื่น ๆ"></div>
+        </div>
+        <div class="nt only-i">
+          <div class="cap">ช่องทางชำระเงิน</div>
+          <div class="ed" contenteditable="true" data-k="pay" data-ph="ธนาคาร / ชื่อบัญชี / เลขที่บัญชี / พร้อมเพย์"></div>
+        </div>
+      </div>
+
+    </div>
+   </div>
+  </div>
+</div>
+
+<script>
+/*PURE*/
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100}
+function num(s){var v=parseFloat(String(s==null?'':s).replace(/[^\d.\-]/g,''));return isFinite(v)?v:0}
+var nf2=new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function fmt(n){return nf2.format(n)}
+function fmtQty(v){return Number.isInteger(v)?String(v):String(+v.toFixed(2))}
+var DIG=['ศูนย์','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+var POS=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+function readGroup(s,isTop){
+  var r='',L=s.length;
+  for(var i=0;i<L;i++){
+    var d=+s[i],p=L-1-i;
+    if(!d)continue;
+    if(p===1){r+=d===1?'สิบ':(d===2?'ยี่สิบ':DIG[d]+'สิบ')}
+    else if(p===0){
+      var others=s.slice(0,-1).replace(/0/g,'')!=='';
+      r+=(d===1&&(others||!isTop))?'เอ็ด':DIG[d];
+    }else r+=DIG[d]+POS[p];
+  }
+  return r;
+}
+function bahtText(n){
+  n=Math.abs(r2(n));
+  var parts=n.toFixed(2).split('.'),ip=parts[0],sat=parts[1];
+  var groups=[],s=ip;
+  while(s.length>6){groups.unshift(s.slice(-6));s=s.slice(0,-6)}
+  groups.unshift(s);
+  var text;
+  if(+ip===0)text='ศูนย์';
+  else text=groups.map(function(g,i){return readGroup(i===0?String(+g):g,i===0)}).join('ล้าน');
+  text+='บาท';
+  if(+sat===0)return text+'ถ้วน';
+  return text+readGroup(String(+sat),true)+'สตางค์';
+}
+function calc(S){
+  var rows=S.items.map(function(it){return r2(num(it.q)*num(it.p))});
+  var sub=r2(rows.reduce(function(a,b){return a+b},0));
+  var disc=0;
+  if(S.optDisc){disc=S.discUnit==='pct'?r2(sub*Math.min(Math.max(num(S.disc),0),100)/100):Math.min(Math.max(r2(num(S.disc)),0),sub)}
+  var after=r2(sub-disc);
+  var vat=S.optVat?r2(after*num(S.vat)/100):0;
+  var total=r2(after+vat);
+  var wht=S.optWht?r2(after*num(S.wht)/100):0;
+  return {rows:rows,sub:sub,disc:disc,after:after,vat:vat,total:total,wht:wht,pay:r2(total-wht)};
+}
+var TH_M=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function thDate(iso){
+  var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||'');
+  if(!m)return '';
+  return (+m[3])+' '+TH_M[+m[2]-1]+' '+(+m[1]+543);
+}
+/*END*/
+
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var LS='seabone-quote-v1';
+function pad(n){return String(n).padStart(2,'0')}
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function plus(n){var d=new Date();d.setDate(d.getDate()+n);return iso(d)}
+
+var DEF={
+  mode:'q',optDisc:false,discUnit:'baht',disc:'0',optVat:true,vat:'7',optWht:false,wht:'3',
+  coName:'บริษัทซีโบน จำกัด',taxId:'1015550124792',
+  coAddr:'สำนักงานใหญ่ เลขที่ 1/29 หมู่บ้านวาสินี ซอยลาดพร้าว 101\nแขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240',
+  email:'',job:'',date:iso(new Date()),
+  cName:'',cAddr:'',cTax:'',cContact:'',cTel:'',cMail:'',pay:'',
+  th_q:'ใบเสนอราคา',th_i:'ใบแจ้งหนี้',en_q:'QUOTATION',en_i:'INVOICE',
+  no_q:'QT-001',no_i:'INV-001',due_q:plus(30),due_i:plus(30),
+  notes_q:'1. ยืนราคา 30 วัน นับจากวันที่เสนอราคา\n2. เงื่อนไขการชำระเงิน: ตามที่ตกลงกัน',
+  notes_i:'กรุณาชำระเงินภายในวันที่ครบกำหนด และส่งหลักฐานการโอนเงินมายังอีเมลติดต่อ',
+  sigL_q:'ลูกค้า / ผู้อนุมัติสั่งซื้อ',sigL_i:'ผู้รับวางบิล',sigR_q:'ผู้เสนอราคา',sigR_i:'ผู้ออกใบแจ้งหนี้',
+  sigLn:'',sigLd:'',sigRn:'',sigRd:'',
+  items:[
+    {d:'ตัวอย่าง: ค่าออกแบบและวางระบบ',q:'1',p:'15000'},
+    {d:'ตัวอย่าง: ค่าพัฒนาและติดตั้ง',q:'2',p:'8500'},
+    {d:'ตัวอย่าง: ค่าบำรุงรักษารายเดือน',q:'3',p:'1200'}
+  ],
+  logo:''
+};
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function loadState(){
+  var d=clone(DEF),o={};
+  try{o=JSON.parse(localStorage.getItem(LS)||'{}')||{}}catch(e){}
+  Object.keys(o).forEach(function(k){d[k]=o[k]});
+  if(!Array.isArray(d.items)||!d.items.length)d.items=clone(DEF.items);
+  if(d.mode!=='i')d.mode='q';
+  return d;
+}
+var S=loadState();
+var sheet=$('#sheet'),stage=$('#stage'),scaler=$('#scaler'),statusEl=$('#status');
+var saveT=0;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}},300)}
+function setStatus(t){statusEl.textContent=t||''}
+
+/* ---------- reading / writing text fields ---------- */
+function readEl(t){
+  var v=t.innerText.replace(/ /g,' ');
+  v=t.classList.contains('single')?v.replace(/\s*\n\s*/g,' ').trim():v.replace(/\n+$/,'');
+  return v;
+}
+function keyOf(el,a,b){return el.dataset[a]!==undefined?el.dataset[a]:el.dataset[b]+'_'+S.mode}
+
+/* ---------- rows ---------- */
+function renderRows(){
+  var tb=$('#rows');tb.textContent='';
+  S.items.forEach(function(it,i){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td class="n">'+(i+1)+'</td>'+
+      '<td><div class="ed" contenteditable="true" data-f="d" data-ph="รายละเอียดสินค้า / บริการ"></div></td>'+
+      '<td class="num"><div class="ed single" contenteditable="true" data-f="q" data-ph="0"></div></td>'+
+      '<td class="num"><div class="ed single" contenteditable="true" data-f="p" data-ph="0.00"></div></td>'+
+      '<td class="num t"><span class="tv"></span><button type="button" class="del noexp" aria-label="ลบรายการที่ '+(i+1)+'">×</button></td>';
+    $('[data-f=d]',tr).textContent=it.d;
+    $('[data-f=q]',tr).textContent=fmtQty(num(it.q));
+    $('[data-f=p]',tr).textContent=fmt(num(it.p));
+    tb.appendChild(tr);
+  });
+}
+
+/* ---------- dates ---------- */
+function dateKey(w){return w.dataset.dk!==undefined?w.dataset.dk:w.dataset.dkm+'_'+S.mode}
+function renderDates(){
+  $$('.date').forEach(function(w){
+    var v=S[dateKey(w)]||'';
+    $('input',w).value=v;
+    $('.dt',w).textContent=thDate(v);
+  });
+}
+
+/* ---------- full render ---------- */
+function renderAll(){
+  var q=S.mode==='q';
+  sheet.dataset.mode=S.mode;
+  $('#lblDue').textContent=q?'ยืนราคาถึงวันที่':'ครบกำหนดชำระ';
+  $$('[data-k]').forEach(function(el){el.textContent=S[el.dataset.k]||''});
+  $$('[data-km]').forEach(function(el){el.textContent=S[el.dataset.km+'_'+S.mode]||''});
+  renderDates();
+  $('#mQ').setAttribute('aria-checked',String(q));
+  $('#mI').setAttribute('aria-checked',String(!q));
+  $('#optDisc').checked=S.optDisc;$('#optVat').checked=S.optVat;$('#optWht').checked=S.optWht;
+  $('#vatRate').value=S.vat;$('#whtRate').value=S.wht;
+  $('#discVal').textContent=S.disc;
+  renderRows();applyLogo();paint();
+}
+
+/* ---------- totals ---------- */
+function paint(){
+  var c=calc(S);
+  $$('#rows tr').forEach(function(tr,i){$('.tv',tr).textContent=fmt(c.rows[i]||0)});
+  $('#sSub').textContent=fmt(c.sub);
+  $('#sDisc').textContent='-'+fmt(c.disc);
+  $('#sAfter').textContent=fmt(c.after);
+  $('#sVat').textContent=fmt(c.vat);
+  $('#sTot').textContent=fmt(c.total);
+  $('#sWht').textContent='-'+fmt(c.wht);
+  $('#sPay').textContent=fmt(c.pay);
+  $('#vatPct').textContent=S.vat||'0';
+  $('#whtPct').textContent=S.wht||'0';
+  $('#unit').textContent=S.discUnit==='pct'?'%':'บาท';
+  $('#lnDisc').hidden=!S.optDisc;$('#lnAfter').hidden=!S.optDisc;
+  $('#lnVat').hidden=!S.optVat;
+  $('#lnWht').hidden=!S.optWht;$('#lnPay').hidden=!S.optWht;
+  $('#lnTotal').classList.toggle('grand',!S.optWht);
+  $('#lnPay').classList.toggle('grand',S.optWht);
+  $('#words').textContent='('+bahtText(S.optWht?c.pay:c.total)+')';
+  fit();
+}
+
+/* ---------- editing ---------- */
+document.addEventListener('input',function(e){
+  var t=e.target;
+  if(!t.classList||!t.classList.contains('ed'))return;
+  if(!t.textContent.trim())t.innerHTML='';
+  var tr=t.closest('tr');
+  if(tr&&t.dataset.f){
+    var idx=Array.prototype.indexOf.call(tr.parentNode.children,tr);
+    var it=S.items[idx];if(!it)return;
+    it[t.dataset.f]=t.dataset.f==='d'?readEl(t):String(num(t.textContent));
+  }else if(t.id==='discVal'){S.disc=String(num(t.textContent))}
+  else if(t.dataset.k!==undefined){S[t.dataset.k]=readEl(t)}
+  else if(t.dataset.km!==undefined){S[t.dataset.km+'_'+S.mode]=readEl(t)}
+  paint();save();
+});
+document.addEventListener('keydown',function(e){
+  var t=e.target;
+  if(e.key==='Enter'&&t.classList&&t.classList.contains('single')){e.preventDefault();t.blur()}
+});
+document.addEventListener('paste',function(e){
+  var t=e.target.closest&&e.target.closest('.ed');
+  if(!t)return;
+  e.preventDefault();
+  var txt=(e.clipboardData||window.clipboardData).getData('text/plain');
+  if(t.classList.contains('single'))txt=txt.replace(/\s*\n\s*/g,' ');
+  document.execCommand('insertText',false,txt);
+});
+document.addEventListener('focusin',function(e){
+  var t=e.target;
+  if(t.dataset&&(t.dataset.f==='q'||t.dataset.f==='p')||t.id==='discVal'){
+    var r=document.createRange();r.selectNodeContents(t);
+    var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+  }
+});
+document.addEventListener('focusout',function(e){
+  var t=e.target;
+  if(!t.dataset)return;
+  if(t.dataset.f==='q')t.textContent=fmtQty(num(t.textContent));
+  else if(t.dataset.f==='p')t.textContent=fmt(num(t.textContent));
+  else if(t.id==='discVal')t.textContent=String(num(t.textContent));
+});
+$('#rows').addEventListener('click',function(e){
+  var b=e.target.closest('.del');
+  if(!b)return;
+  var tr=b.closest('tr');
+  var idx=Array.prototype.indexOf.call(tr.parentNode.children,tr);
+  if(S.items.length>1)S.items.splice(idx,1);else S.items[0]={d:'',q:'1',p:'0'};
+  renderRows();paint();save();
+});
+$('#addRow').addEventListener('click',function(){
+  S.items.push({d:'',q:'1',p:'0'});
+  renderRows();paint();save();
+  var rows=$$('#rows tr');var f=$('[data-f=d]',rows[rows.length-1]);if(f)f.focus();
+});
+
+/* dates */
+$$('.date').forEach(function(w){
+  var inp=$('input',w);
+  w.addEventListener('click',function(){try{inp.showPicker()}catch(e){}});
+  inp.addEventListener('change',function(){
+    S[dateKey(w)]=inp.value;
+    $('.dt',w).textContent=thDate(inp.value);
+    save();
+  });
+});
+
+/* toolbar */
+function setMode(m){S.mode=m;renderAll();save();setStatus('')}
+$('#mQ').addEventListener('click',function(){setMode('q')});
+$('#mI').addEventListener('click',function(){setMode('i')});
+[['#optDisc','optDisc'],['#optVat','optVat'],['#optWht','optWht']].forEach(function(p){
+  $(p[0]).addEventListener('change',function(e){S[p[1]]=e.target.checked;paint();save()});
+});
+$('#vatRate').addEventListener('input',function(e){S.vat=String(num(e.target.value));paint();save()});
+$('#whtRate').addEventListener('input',function(e){S.wht=String(num(e.target.value));paint();save()});
+$('#unit').addEventListener('click',function(){S.discUnit=S.discUnit==='pct'?'baht':'pct';paint();save()});
+
+var resetArmed=0,resetT=0;
+$('#btnReset').addEventListener('click',function(){
+  var b=$('#btnReset');
+  if(!resetArmed){
+    resetArmed=1;b.textContent='กดอีกครั้งเพื่อยืนยัน';
+    resetT=setTimeout(function(){resetArmed=0;b.textContent='คืนค่าเริ่มต้น'},3500);
+    return;
+  }
+  clearTimeout(resetT);resetArmed=0;b.textContent='คืนค่าเริ่มต้น';
+  var logo=S.logo,mode=S.mode;
+  S=clone(DEF);S.logo=logo;S.mode=mode;
+  renderAll();save();setStatus('คืนค่าเริ่มต้นแล้ว');
+});
+
+/* logo */
+function applyLogo(){
+  var img=$('#logoImg'),box=$('#logo');
+  if(S.logo){img.src=S.logo;img.hidden=false;$('#logoPh').hidden=true;box.classList.add('has')}
+  else{img.removeAttribute('src');img.hidden=true;$('#logoPh').hidden=false;box.classList.remove('has')}
+}
+$('#logo').addEventListener('click',function(e){
+  if(e.target.closest('#logoDel')){S.logo='';applyLogo();fit();save();e.stopPropagation();return}
+  $('#logoFile').click();
+});
+$('#logo').addEventListener('keydown',function(e){
+  if((e.key==='Enter'||e.key===' ')&&e.target===this){e.preventDefault();$('#logoFile').click()}
+});
+$('#logoFile').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var im=new Image();
+    im.onload=function(){
+      var w=im.naturalWidth||im.width||300,h=im.naturalHeight||im.height||150;
+      var k=Math.min(1,520/Math.max(w,h));
+      var c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*k));c.height=Math.max(1,Math.round(h*k));
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      try{S.logo=c.toDataURL('image/png')}catch(err){S.logo=rd.result}
+      applyLogo();save();
+    };
+    im.onerror=function(){setStatus('อ่านไฟล์รูปนี้ไม่ได้ ลองใช้ PNG หรือ JPG')};
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+
+/* ---------- fit sheet to screen ---------- */
+function fit(){
+  var avail=stage.clientWidth||794;
+  var s=Math.min(1,avail/794);
+  scaler.style.transform=s<1?'scale('+s+')':'none';
+  stage.style.height=Math.ceil(sheet.offsetHeight*s)+'px';
+}
+if(window.ResizeObserver){
+  new ResizeObserver(fit).observe(stage);
+  new ResizeObserver(fit).observe(sheet);
+}else window.addEventListener('resize',fit);
+
+/* ---------- PDF ---------- */
+var dlP=(window.claude&&window.claude.use)?window.claude.use('downloads'):Promise.resolve(null);
+dlP.then(function(d){
+  if(!d){$('#btnPdf').disabled=true;setStatus('มุมมองนี้ดาวน์โหลดไฟล์ไม่ได้ เปิดหน้านี้ใน claude.ai เพื่อดาวน์โหลด PDF')}
+}).catch(function(){});
+
+$('#btnPdf').addEventListener('click',async function(){
+  var btn=this;
+  if(!window.html2canvas||!window.jspdf){setStatus('โหลดตัวสร้าง PDF ไม่สำเร็จ ลองรีเฟรชหน้านี้');return}
+  var dl=await dlP;
+  if(!dl){setStatus('มุมมองนี้ดาวน์โหลดไฟล์ไม่ได้');return}
+  btn.disabled=true;setStatus('กำลังสร้าง PDF...');
+  try{
+    if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    var breaks=[];
+    var canvas=await window.html2canvas(sheet,{
+      scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false,windowWidth:1100,
+      onclone:function(cd){
+        var sh=cd.getElementById('sheet');sh.classList.add('exporting');
+        var sc=cd.getElementById('scaler');sc.style.transform='none';sc.style.width='794px';
+        var st=cd.getElementById('stage');st.style.height='auto';st.style.overflow='visible';
+        function rel(el){var y=0;while(el&&el!==sh){y+=el.offsetTop;el=el.offsetParent}return y}
+        breaks=$$('tbody tr,[data-brk]',sh).map(rel).filter(function(y){return y>0}).sort(function(a,b){return a-b});
+      }
+    });
+    var K=canvas.width/794,PAGE=1122,TOPM=36,BOTM=36;
+    var total=canvas.height/K;
+    var pages=[],y=0,first=true;
+    while(true){
+      var off=first?0:TOPM;
+      if(total-y<=PAGE-off+2){pages.push([y,total,off]);break}
+      var limit=y+PAGE-off-BOTM,b=limit;
+      for(var i=breaks.length-1;i>=0;i--){if(breaks[i]<=limit&&breaks[i]>y+60){b=breaks[i];break}}
+      pages.push([y,b,off]);y=b;first=false;
+    }
+    var jsPDF=window.jspdf.jsPDF;
+    var doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait',compress:true});
+    var title=(S['th_'+S.mode]||'เอกสาร')+' '+(S['no_'+S.mode]||'');
+    doc.setProperties({title:title.trim()});
+    pages.forEach(function(p,idx){
+      var sy=Math.round(p[0]*K),sh2=Math.min(canvas.height-sy,Math.round((PAGE-p[2])*K),Math.round((p[1]-p[0])*K));
+      var pc=document.createElement('canvas');
+      pc.width=Math.round(794*K);pc.height=Math.round(PAGE*K);
+      var ctx=pc.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,pc.width,pc.height);
+      ctx.drawImage(canvas,0,sy,canvas.width,sh2,0,Math.round(p[2]*K),canvas.width,sh2);
+      if(idx>0)doc.addPage();
+      doc.addImage(pc.toDataURL('image/png'),'PNG',0,0,210,297,undefined,'FAST');
+    });
+    var name=((S['no_'+S.mode]||S['th_'+S.mode]||'document')+'').replace(/[\\\/:*?"<>|]+/g,'-').trim()||'document';
+    await dl.save({filename:name+'.pdf',data:doc.output('arraybuffer')});
+    setStatus('บันทึกไฟล์ PDF แล้ว'+(pages.length>1?' ('+pages.length+' หน้า)':''));
+  }catch(err){
+    if(err&&err.code==='declined')setStatus('ยกเลิกการดาวน์โหลด');
+    else if(err&&err.code==='rate_limited')setStatus('มีหน้าต่างยืนยันค้างอยู่ รอสักครู่แล้วลองใหม่');
+    else setStatus('สร้าง PDF ไม่สำเร็จ: '+((err&&err.message)||'ไม่ทราบสาเหตุ'));
+  }finally{btn.disabled=false}
+});
+
+renderAll();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+})();
+</script>
+
+</body></html>
