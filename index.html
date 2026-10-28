@@ -371,7 +371,7 @@ function setStatus(t){statusEl.textContent=t||''}
 
 /* ---------- reading / writing text fields ---------- */
 function readEl(t){
-  var v=t.innerText.replace(/ /g,' ');
+  var v=t.innerText.replace(/ /g,' ');
   v=t.classList.contains('single')?v.replace(/\s*\n\s*/g,' ').trim():v.replace(/\n+$/,'');
   return v;
 }
@@ -581,62 +581,99 @@ if(window.ResizeObserver){
 }else window.addEventListener('resize',fit);
 
 /* ---------- PDF ---------- */
-var dlP=(window.claude&&window.claude.use)?window.claude.use('downloads'):Promise.resolve(null);
-dlP.then(function(d){
-  if(!d){$('#btnPdf').disabled=true;setStatus('มุมมองนี้ดาวน์โหลดไฟล์ไม่ได้ เปิดหน้านี้ใน claude.ai เพื่อดาวน์โหลด PDF')}
-}).catch(function(){});
-
-$('#btnPdf').addEventListener('click',async function(){
-  var btn=this;
-  if(!window.html2canvas||!window.jspdf){setStatus('โหลดตัวสร้าง PDF ไม่สำเร็จ ลองรีเฟรชหน้านี้');return}
-  var dl=await dlP;
-  if(!dl){setStatus('มุมมองนี้ดาวน์โหลดไฟล์ไม่ได้');return}
-  btn.disabled=true;setStatus('กำลังสร้าง PDF...');
-  try{
-    if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
-    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-    var breaks=[];
-    var canvas=await window.html2canvas(sheet,{
-      scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false,windowWidth:1100,
-      onclone:function(cd){
-        var sh=cd.getElementById('sheet');sh.classList.add('exporting');
-        var sc=cd.getElementById('scaler');sc.style.transform='none';sc.style.width='794px';
-        var st=cd.getElementById('stage');st.style.height='auto';st.style.overflow='visible';
-        function rel(el){var y=0;while(el&&el!==sh){y+=el.offsetTop;el=el.offsetParent}return y}
-        breaks=$$('tbody tr,[data-brk]',sh).map(rel).filter(function(y){return y>0}).sort(function(a,b){return a-b});
+$('#btnPdf').addEventListener('click', async function(){
+  var btn = this;
+  if (!window.html2canvas || !window.jspdf) {
+    setStatus('โหลดตัวสร้าง PDF ไม่สำเร็จ ลองรีเฟรชหน้านี้');
+    return;
+  }
+  
+  btn.disabled = true;
+  setStatus('กำลังสร้าง PDF...');
+  
+  try {
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    
+    var breaks = [];
+    var canvas = await window.html2canvas(sheet, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      logging: false,
+      windowWidth: 1100,
+      onclone: function(cd){
+        var sh = cd.getElementById('sheet');
+        sh.classList.add('exporting');
+        var sc = cd.getElementById('scaler');
+        sc.style.transform = 'none';
+        sc.style.width = '794px';
+        var st = cd.getElementById('stage');
+        st.style.height = 'auto';
+        st.style.overflow = 'visible';
+        
+        function rel(el){
+          var y = 0;
+          while(el && el !== sh){ y += el.offsetTop; el = el.offsetParent; }
+          return y;
+        }
+        breaks = $$('tbody tr,[data-brk]', sh).map(rel).filter(function(y){ return y > 0; }).sort(function(a,b){ return a - b; });
       }
     });
-    var K=canvas.width/794,PAGE=1122,TOPM=36,BOTM=36;
-    var total=canvas.height/K;
-    var pages=[],y=0,first=true;
+
+    var K = canvas.width / 794, PAGE = 1122, TOPM = 36, BOTM = 36;
+    var total = canvas.height / K;
+    var pages = [], y = 0, first = true;
+    
     while(true){
-      var off=first?0:TOPM;
-      if(total-y<=PAGE-off+2){pages.push([y,total,off]);break}
-      var limit=y+PAGE-off-BOTM,b=limit;
-      for(var i=breaks.length-1;i>=0;i--){if(breaks[i]<=limit&&breaks[i]>y+60){b=breaks[i];break}}
-      pages.push([y,b,off]);y=b;first=false;
+      var off = first ? 0 : TOPM;
+      if (total - y <= PAGE - off + 2) {
+        pages.push([y, total, off]);
+        break;
+      }
+      var limit = y + PAGE - off - BOTM, b = limit;
+      for (var i = breaks.length - 1; i >= 0; i--) {
+        if (breaks[i] <= limit && breaks[i] > y + 60) {
+          b = breaks[i];
+          break;
+        }
+      }
+      pages.push([y, b, off]);
+      y = b;
+      first = false;
     }
-    var jsPDF=window.jspdf.jsPDF;
-    var doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait',compress:true});
-    var title=(S['th_'+S.mode]||'เอกสาร')+' '+(S['no_'+S.mode]||'');
-    doc.setProperties({title:title.trim()});
-    pages.forEach(function(p,idx){
-      var sy=Math.round(p[0]*K),sh2=Math.min(canvas.height-sy,Math.round((PAGE-p[2])*K),Math.round((p[1]-p[0])*K));
-      var pc=document.createElement('canvas');
-      pc.width=Math.round(794*K);pc.height=Math.round(PAGE*K);
-      var ctx=pc.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,pc.width,pc.height);
-      ctx.drawImage(canvas,0,sy,canvas.width,sh2,0,Math.round(p[2]*K),canvas.width,sh2);
-      if(idx>0)doc.addPage();
-      doc.addImage(pc.toDataURL('image/png'),'PNG',0,0,210,297,undefined,'FAST');
+
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+    var title = (S['th_' + S.mode] || 'เอกสาร') + ' ' + (S['no_' + S.mode] || '');
+    doc.setProperties({ title: title.trim() });
+
+    pages.forEach(function(p, idx){
+      var sy = Math.round(p[0] * K),
+          sh2 = Math.min(canvas.height - sy, Math.round((PAGE - p[2]) * K), Math.round((p[1] - p[0]) * K));
+      var pc = document.createElement('canvas');
+      pc.width = Math.round(794 * K);
+      pc.height = Math.round(PAGE * K);
+      var ctx = pc.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pc.width, pc.height);
+      ctx.drawImage(canvas, 0, sy, canvas.width, sh2, 0, Math.round(p[2] * K), canvas.width, sh2);
+      
+      if (idx > 0) doc.addPage();
+      doc.addImage(pc.toDataURL('image/png'), 'PNG', 0, 0, 210, 297, undefined, 'FAST');
     });
-    var name=((S['no_'+S.mode]||S['th_'+S.mode]||'document')+'').replace(/[\\\/:*?"<>|]+/g,'-').trim()||'document';
-    await dl.save({filename:name+'.pdf',data:doc.output('arraybuffer')});
-    setStatus('บันทึกไฟล์ PDF แล้ว'+(pages.length>1?' ('+pages.length+' หน้า)':''));
-  }catch(err){
-    if(err&&err.code==='declined')setStatus('ยกเลิกการดาวน์โหลด');
-    else if(err&&err.code==='rate_limited')setStatus('มีหน้าต่างยืนยันค้างอยู่ รอสักครู่แล้วลองใหม่');
-    else setStatus('สร้าง PDF ไม่สำเร็จ: '+((err&&err.message)||'ไม่ทราบสาเหตุ'));
-  }finally{btn.disabled=false}
+
+    var name = ((S['no_' + S.mode] || S['th_' + S.mode] || 'document') + '').replace(/[\\\/:*?"<>|]+/g, '-').trim() || 'document';
+    
+    // บันทึกไฟล์ PDF ผ่านเบราว์เซอร์ (รองรับทั้งคอมพิวเตอร์และมือถือ)
+    doc.save(name + '.pdf');
+    setStatus('บันทึกไฟล์ PDF แล้ว' + (pages.length > 1 ? ' (' + pages.length + ' หน้า)' : ''));
+    
+  } catch(err) {
+    setStatus('สร้าง PDF ไม่สำเร็จ: ' + ((err && err.message) || 'ไม่ทราบสาเหตุ'));
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 renderAll();
